@@ -25,7 +25,7 @@ RUN chsh -s $(which zsh)
 
 # cd ~
 # ssh-keygen -t ed25519 -C "felipe.ginklings@gmail.com"
-# nano .zshrc
+# nano .ssh/
 # git clone git@github.com:FelipeGinklings/zsh-backup.git
 # mv zsh-backup .zsh-backup
 # cd zsh-backup
@@ -36,8 +36,8 @@ RUN chsh -s $(which zsh)
 # 
 # source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-# EOF
 # export PATH="$HOME/bin:$PATH"
+# EOF
 
 # Create working directory
 WORKDIR /workspace
