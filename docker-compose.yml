@@ -1,0 +1,10 @@
+services:
+  os-class:
+    build: .
+    image: os-class-env
+    container_name: os-class
+    volumes:
+      - .:/workspace
+    stdin_open: true
+    tty: true
+    working_dir: /workspace
