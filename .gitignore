@@ -1,1 +1,6 @@
 .vscode
+*
+!*.c
+!*.h
+!.gitignore
+!ExThreads
