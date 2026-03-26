@@ -17,35 +17,50 @@
 #include <unistd.h>
 
 int vet[10] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-int sum_1 = 0;
-int sum_2 = 0;
-int mul_1 = 1;
-int mul_2 = 1;
-
-void preenche_vetor() {
-    srand(time(NULL));
-    for (size_t i = 0; i < 10; i++) {
-        int random_num = rand() % 10 + 1;
-        printf("%d\t", random_num);
-        vet[i] = random_num;
-    }
-}
+pthread_mutex_t mutex_sum = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex_mul = PTHREAD_MUTEX_INITIALIZER;
+int sum = 0;
+int mul = 1;
+int sum_i = 0;
+int mul_i = 0;
 
 void* soma1(void* param) {
-    for (size_t i = 0; i < 10 / 2; i++) sum_1 += vet[i];
+    pthread_mutex_lock(&mutex_sum);
+    while (sum_i < 10) {
+        sum += vet[sum_i];
+        sum_i++;
+    }
+    pthread_mutex_unlock(&mutex_sum);
     pthread_exit(0);
 }
+
 void* soma2(void* param) {
-    for (size_t i = 10 / 2; i < 10; i++) sum_2 += vet[i];
+    pthread_mutex_lock(&mutex_sum);
+    while (sum_i < 10) {
+        sum += vet[sum_i];
+        sum_i++;
+    }
+    pthread_mutex_unlock(&mutex_sum);
     pthread_exit(0);
 }
 
 void* mul1(void* param) {
-    for (size_t i = 0; i < 10 / 2; i++) mul_1 *= vet[i];
+    pthread_mutex_lock(&mutex_mul);
+    while (sum_i < 10) {
+        mul *= vet[sum_i];
+        sum_i++;
+    }
+    pthread_mutex_unlock(&mutex_mul);
     pthread_exit(0);
 }
+
 void* mul2(void* param) {
-    for (size_t i = 10 / 2; i < 10; i++) mul_2 *= vet[i];
+    pthread_mutex_lock(&mutex_mul);
+    while (sum_i < 10) {
+        mul *= vet[sum_i];
+        sum_i++;
+    }
+    pthread_mutex_unlock(&mutex_mul);
     pthread_exit(0);
 }
 
@@ -64,11 +79,6 @@ int main() {
     pthread_join(tid_soma_2, NULL);
     pthread_join(tid_mul_1, NULL);
     pthread_join(tid_mul_2, NULL);
-
-    printf("\nResultado da soma 1: %d\n", sum_1);
-    printf("\nResultado da soma 2: %d\n", sum_2);
-    printf("\nResultado da multiplicação 1: %d\n", mul_1);
-    printf("\nResultado da multiplicação 2: %d\n", mul_2);
 
     printf("Retornou para o processo!");
 }
